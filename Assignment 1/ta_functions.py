@@ -98,4 +98,55 @@ def get_camber(pos,n):
     camber_y = (ftop(x) + fbottom(x))/2.
     return x, camber_y
 
+def get_colpoints(x,y):
+    """
+    Function takes camber discretisation points and get collocation points
+    :param x: x position of vortex points
+    :param y: y position of vortex points
+    :return: x, y position of collocation points
+    """
+    xcol = np.zeros((len(x)-1,1))
+    ycol = np.zeros((len(y)-1,1))
+    j = 0
+    for i in range(1,len(x)-1):
+        xcol[j] = x[i-1] + (x[i]-x[i-1])/2.
+        ycol[j] = y[i-1] + (y[i]-y[i-1])/2.
+        j += 1
+    return xcol, ycol
 
+def get_coeffMatrix(panels,n):
+    A = np.zeros((n - 1, n - 1))
+    for i in range(n - 1):
+        for j in range(n - 1):
+            dx = panels[i].cpoint.x - panels[j].vpoint.x
+            dy = panels[i].cpoint.y - panels[j].vpoint.y
+            r2 = dx ** 2 + dy ** 2
+            Asmall = np.array([dy, -dx])
+            A[i, j] = (1 / (2 * np.pi * r2)) * (Asmall[0] * panels[i].n1 + Asmall[1] * panels[i].n2)
+    return A
+
+def get_RHS(U,alfa,panels,n):
+    RHS = np.zeros((n - 1, 1))
+    for i in range(len(RHS)):
+        RHS[i] = -U * np.sin(alfa + panels[i].beta)
+    return RHS
+
+def get_tangMatrix(panels,n):
+    B = np.zeros((n-1,n-1))
+    for i in range(n-1):
+        for j in range(n-1):
+            dx = panels[i].cpoint.x - panels[j].vpoint.x
+            dy = panels[i].cpoint.y - panels[j].vpoint.y
+            r2 = dx ** 2 + dy ** 2
+            Bsmall = np.array([dy, -dx])
+            B[i, j] = (1 / (2 * np.pi * r2)) * (Bsmall[0] * panels[i].t1 + Bsmall[1] * panels[i].t2)
+    return B
+
+def post_process(U,alfa,Gamma,panels,n):
+    B = get_tangMatrix(panels,n)
+    V1 = np.matmul(B,Gamma)
+    V2 = np.zeros((n-1,1))
+    for i in range(len(V2)):
+        V2[i] = U*np.cos(alfa+panels[i].beta)
+    ut = V2 + V1
+    return ut
