@@ -4,4 +4,5 @@
 /Assignment 1/__pycache__/
 /.idea
 /Assignment 1/*.pdf
-/.idea/*
+/.idea/misc.xml
+/.idea/AircraftAero.iml
