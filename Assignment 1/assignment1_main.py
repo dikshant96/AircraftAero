@@ -19,7 +19,7 @@ for i in range(1,len(x)):
 A = ff.get_coeffMatrix(panels,n)
 
 #Get RHS of the equation (free stream effect)
-alfa = 5*(np.pi/180)
+alfa = 2*(np.pi/180)
 U = 10
 RHS = ff.get_RHS(U,alfa,panels,n)
 
@@ -27,18 +27,17 @@ RHS = ff.get_RHS(U,alfa,panels,n)
 Gamma = np.linalg.solve(A,RHS)
 
 dL = Gamma*U
+Cl = sum(dL)[0]/(0.5*U*U)
 
 dP = np.zeros((n-1,1))
 Cp = np.zeros((n-1,1))
-Cp2 = np.zeros((n-1,1))
-ut = ff.post_process(U,alfa,Gamma,panels,n)
 for i in range(n-1):
     dP[i] = U*Gamma[i]/panels[i].ds
-    Cp[i] = dP[i]/(U)
-    Cp2[i] = 1 - ((ut[i]**2)/(U**2))
+    Cp[i] = dP[i]/(0.5*U*U)
+
 
 xv = [panels[i].vpoint.x for i in range(n-1)]
 
-#plt.scatter(xv, Cp)
-plt.scatter(xv, Cp2)
+plt.scatter(xv, Cp)
+#plt.scatter(xv, Cp2)
 plt.show()

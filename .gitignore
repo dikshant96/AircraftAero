@@ -2,6 +2,6 @@
 /Assignment 1/Assignment-1-2019-2020-V2.pdf
 /venv/
 /Assignment 1/__pycache__/
-/.idea/
-/Assignment 1/*.pdf
 /.idea
+/Assignment 1/*.pdf
+/.idea/*

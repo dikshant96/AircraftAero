@@ -71,6 +71,7 @@ def get_cosdist(n):
     """
     beta = np.linspace(0,np.pi,n)
     x = (1-np.cos(beta))/2
+    x = np.linspace(0,1,n)
     return x
 
 def get_camber(pos,n):
