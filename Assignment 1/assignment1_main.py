@@ -4,11 +4,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #Generating NACA 4 digit airfoil
-pos, yc = ff.gen_NACAfoil(100,0,0,9)
+pos, yc = ff.gen_NACAfoil(100,1,4,9)
 
 #Get camber of the airfoil
-n = 41
-x, y = ff.get_camber(pos,n)
+n = 21
+bool = 'cosine'
+x, y = ff.get_camber(pos,n,bool)
+x2, y2 = ff.get_camber(pos,n,'uniform')
 
 #Get pansels from the discretisation
 panels = []
@@ -38,6 +40,14 @@ for i in range(n-1):
 
 xv = [panels[i].vpoint.x for i in range(n-1)]
 
-plt.scatter(xv, Cp)
-#plt.scatter(xv, Cp2)
-plt.show()
+plt.figure(1)
+plt.plot(pos[:,0],pos[:,1],'-')
+plt.plot(x,y,'-x')
+plt.legend(['Airfoil','Camber'])
+plt.xlabel('x [m]')
+plt.ylabel('y [m]')
+
+
+#plt.scatter(xv, Cp)
+#plt.scatter(xv, Cp2
+#plt.show()

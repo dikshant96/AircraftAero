@@ -62,19 +62,21 @@ def gen_NACAfoil(n,m,p,t):
     pos[:n, :] = pos[n - 1::-1, :]
     return pos, yc
 
-def get_cosdist(n):
+def get_dist(n,bool):
     """
     Defines cosine discretisation to better capture LE and TE gradients
     than equally spaced x distribution
     :param n: number of points
     :return: x vectore with cosine distribution
     """
-    beta = np.linspace(0,np.pi,n)
-    x = (1-np.cos(beta))/2
-    x = np.linspace(0,1,n)
+    if bool == 'cosine':
+        beta = np.linspace(0,np.pi,n)
+        x = (1-np.cos(beta))/2
+    else:
+        x = np.linspace(0,1,n)
     return x
 
-def get_camber(pos,n):
+def get_camber(pos,n,bool):
     """
     Function to return mean camber line with cosine discretisation
     from upper and lower pos of profile
@@ -95,7 +97,7 @@ def get_camber(pos,n):
     ybottom = ybottom[sort_bottom]
     ftop = interp1d(xtop,ytop)
     fbottom = interp1d(xbottom,ybottom)
-    x = get_cosdist(n)
+    x = get_dist(n,bool)
     camber_y = (ftop(x) + fbottom(x))/2.
     return x, camber_y
 
